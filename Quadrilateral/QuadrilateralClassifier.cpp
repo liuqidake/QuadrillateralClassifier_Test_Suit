@@ -11,6 +11,7 @@
 #include <cmath>
 #include <sstream>
 #include <fstream>
+#include <cmath>
 
 struct Point{
     double x;
@@ -25,7 +26,7 @@ struct PointComparator{
 
 double ComputeSlope(const Point& pa, const Point& pb){
     //Get the slope rate by computing the value of the x values difference divided by y vlaues diofference of two points
-    if(pa.x-pb.x == 0) return 1;
+    if(pa.x-pb.x == 0) return INT_MAX;
     return (pa.y-pb.y) /  (pa.x-pb.x);
 }
 
@@ -153,6 +154,46 @@ bool hasColinear(const std::vector<Point> points){
     || ComputeSlope(points[3], points[0]) == ComputeSlope(points[0], points[1]);
 }
 
+bool hasIntersection(const std::vector<Point> points){
+    double mostLeft = std::min(std::min(points[0].x, points[1].x), std::min(points[2].x, points[3].x));
+    double mostRight = std::max(std::max(points[0].x, points[1].x), std::max(points[2].x, points[3].x));
+    double mostTop = std::max(std::max(points[0].y, points[1].y), std::max(points[2].y, points[3].y));
+    double mostBottom = std::min(std::min(points[0].y, points[1].y), std::min(points[2].y, points[3].y));
+    
+    if(isIntersected(points[0], points[1], points[2], points[3])){
+        Point intersection = getIntersectionPoint( points[0], points[1], points[2], points[3]);
+        return intersection.x>=mostLeft && intersection.x <= mostRight && intersection.y >= mostBottom && intersection.y <= mostTop;
+    }
+    
+    if(isIntersected(points[0], points[3], points[1], points[2])){
+        Point intersection = getIntersectionPoint( points[0], points[3], points[1], points[2]);
+        return intersection.x>=mostLeft && intersection.x <= mostRight && intersection.y >= mostBottom && intersection.y <= mostTop;
+    }
+    
+    return false;
+}
+
+bool isIntersected(const Point& lineAPointA, const Point& lineAPointB, const Point& lineBPointA, const Point& lineBPointB){
+    double lineASlope = ComputeSlope(lineAPointA, lineAPointB);
+    double lineBSlope = ComputeSlope(lineBPointA, lineBPointB);
+    
+    return lineASlope != lineBSlope;
+}
+
+Point getIntersectionPoint(const Point& lineAPointA, const Point& lineAPointB, const Point& lineBPointA, const Point& lineBPointB){
+    double slopeA = ComputeSlope(lineAPointA, lineAPointB);
+    double constA = lineAPointA.y - slopeA * lineAPointA.x;
+    
+    double slopeB = ComputeSlope(lineBPointA, lineBPointB);
+    double constB = lineBPointA.y - slopeB * lineBPointA.x;
+    
+    Point point;
+    point.x = (constA - constB) / (slopeB - slopeA);
+    point.y = point.x * slopeA + constA;
+    
+    return point;
+}
+
 void readInput(std::string fileName){
     std::ifstream input(fileName);
     std::string coordinate;
@@ -174,8 +215,14 @@ void readInput(std::string fileName){
             continue;
         }
         
-        //error 3: check colinear
+        //error 4: check colinear
         if(hasColinear(points)){
+            out<<"error 4"<<std::endl;
+            continue;
+        }
+        
+        //error 3: check interection
+        if(hasIntersection(points)){
             out<<"error 3"<<std::endl;
             continue;
         }

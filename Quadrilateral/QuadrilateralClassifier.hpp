@@ -86,5 +86,11 @@ bool hasCoincide(std::set<Point,PointComparator>& set, const std::vector<Point> 
 
 bool hasColinear(const std::vector<Point> points);
 
+bool hasIntersection(const std::vector<Point> points);
+
+bool isIntersected(const Point& lineAPointA, const Point& lineAPointB, const Point& lineBPointA, const Point& lineBPointB);
+
+Point getIntersectionPoint(const Point& lineAPointA, const Point& lineAPointB, const Point& lineBPointA, const Point& lineBPointB);
+
 
 #endif /* QuadrilateralClassifier_hpp */
