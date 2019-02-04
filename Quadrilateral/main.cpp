@@ -11,4 +11,8 @@
 
 int main(int argc, const char * argv[]) {
     readInput("input.txt");
+//    std::string a = "2.3";
+//    double b = std::stod(a);
+//    int c = std::stoi(a);
+//    std::cout<< (b ==c);
 }

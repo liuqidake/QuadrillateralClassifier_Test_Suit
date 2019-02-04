@@ -9,9 +9,8 @@
 
 #include "QuadrilateralClassifier.hpp"
 #include <cmath>
-#include <fstream>
 #include <sstream>
-#include <set>
+#include <fstream>
 
 struct Point{
     double x;
@@ -98,47 +97,91 @@ void CheckShape(const std::vector<Point>& points, std::ofstream &out){
     //Case 2: kite
     //If it is not a parallelogram but has two pairs of laterals with same length but not for all four, the it is a kite
     else if (TwoPairsOfAdjacentCongruentSides(points)){
-        out<<"Kite"<<std::endl;
+        out<<"kite"<<std::endl;
     }
     //Case 3: trapezoid
     //If it is not a parallelogram but there is only one pair of laterls are parallal to each other, then it is a trpezoid.
     else if (OnlyOnePairParallel(points)){
         out<<"trapezoid"<<std::endl;
-    } else {
-        out<<"Unable to catagorized"<<std::endl;
-    }
+    } 
 }
 
-std::vector<Point> splitStr(std::string& data){
+void parseLine(std::string& data, std::vector<Point>& points, std::ofstream& out){
     std::istringstream iss(data);
     std::vector<std::string> results((std::istream_iterator<std::string>(iss)),
                                      std::istream_iterator<std::string>());
-    std::vector<Point> points;
     points.push_back({0,0});
+    if(results.size() != 6){
+        out<<"error 1"<<std::endl;
+        return;
+    }
+    int i = 0;
+    while(i <results.size()){
+        try{
+            int first = i;
+            double x = std::stod(results[first]);
+            int xCompare = std::stoi(results[first]);
+            int second = ++i;
+            double y = std::stod(results[second]);
+            int yCompare = std::stoi(results[second]);
+            if(x<0 || x > 100 || y<0 || y>100 || x!= xCompare || y!= yCompare){
+                out<<"error 1"<<std::endl;
+                return;
+            }
+            points.push_back({x,y});
+        } catch(const std::invalid_argument&){
+            out<<"error 1"<<std::endl;
+            return;
+        }
+        i++;
+    }
+    return;
     
-    points.push_back({std::stod(results[0]), std::stod(results[1])});
-    points.push_back({std::stod(results[2]), std::stod(results[3])});
-    points.push_back({std::stod(results[4]), std::stod(results[5])});
-    
-    return points;
-    
+}
+
+bool hasCoincide(std::set<Point,PointComparator>& set, const std::vector<Point> points){
+    for(int i = 0; i< points.size(); i++){
+        set.insert(points[i]);
+    }
+    return set.size() < 4;
+}
+
+bool hasColinear(const std::vector<Point> points){
+    return ComputeSlope(points[0], points[1]) == ComputeSlope(points[1], points[2])
+        || ComputeSlope(points[1], points[2]) == ComputeSlope(points[2], points[3])
+    || ComputeSlope(points[2], points[3]) == ComputeSlope(points[3], points[0])
+    || ComputeSlope(points[3], points[0]) == ComputeSlope(points[0], points[1]);
 }
 
 void readInput(std::string fileName){
     std::ifstream input(fileName);
     std::string coordinate;
     std::ofstream out;
-    out.open("Output.txt");
+    out.open("output.txt");
     while(std::getline(input, coordinate)){
-        std::vector<Point>  points = splitStr(coordinate);
-        std::set<Point,PointComparator> set;
-        for(int i = 0; i< points.size(); i++){
-            set.insert(points[i]);
-        }
-        if(set.size()< 4){
-            out<<"Invalid input"<<std::endl;
+        std::vector<Point>  points;
+        
+        //Parse Line And Check error 1
+        parseLine(coordinate, points, out);
+        if(points.size() != 4){
             continue;
         }
+        
+        //error 2: check coincide
+        std::set<Point,PointComparator> set;
+        if(hasCoincide(set, points)){
+            out<<"error 2"<<std::endl;
+            continue;
+        }
+        
+        //error 3: check colinear
+        if(hasColinear(points)){
+            out<<"error 3"<<std::endl;
+            continue;
+        }
+        
+        
+        
         CheckShape(points, out);
     }
     

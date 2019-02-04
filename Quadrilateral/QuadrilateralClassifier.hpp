@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <vector>
+#include <set>
 
 
 struct Point;
@@ -79,6 +80,11 @@ void CheckShape(const std::vector<Point>& shape, std::ofstream &out);
 
 void readInput(std::string fileName);
 
-std::vector<Point> splitStr(std::string& data);
+void parseLine(std::string& data, std::vector<Point>& points, std::ofstream& out);
+
+bool hasCoincide(std::set<Point,PointComparator>& set, const std::vector<Point> points);
+
+bool hasColinear(const std::vector<Point> points);
+
 
 #endif /* QuadrilateralClassifier_hpp */
