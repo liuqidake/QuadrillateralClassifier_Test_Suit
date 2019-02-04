@@ -1,6 +1,0 @@
-square
-rhombus
-Invalid input
-parallelogram
-rectangle
-trapezoid
