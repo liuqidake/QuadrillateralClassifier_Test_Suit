@@ -86,7 +86,7 @@ void CheckShape(const std::vector<Point>& points, std::ofstream &out){
         else if (neighborLateralPerpendicular){
             out<<"rectangle"<<std::endl;
         }
-        //If the neighbor laterlas only has the same length, then it is a rhombus
+        //If the neighbor laterals only has the same length, then it is a rhombus
         else if ( neighborLateralEqual){
             out<<"rhombus"<<std::endl;
         }
