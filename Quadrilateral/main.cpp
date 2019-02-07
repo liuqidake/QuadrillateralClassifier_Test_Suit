@@ -10,5 +10,5 @@
 #include "QuadrilateralClassifier.hpp"
 
 int main(int argc, const char * argv[]) {
-    readInput("input.txt");
+    readInput(argv[1]);
 }

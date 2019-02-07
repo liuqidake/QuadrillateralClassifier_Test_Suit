@@ -1,12 +1,16 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+# In[1]:
+
 
 import pandas as pd
 import numpy as np
 import os
 import random
 
+
+# In[2]:
 
 
 def test_case_generator():
@@ -26,6 +30,8 @@ def test_case_generator():
     error_four()
 
 
+# In[3]:
+
 
 def square_generator():
     """
@@ -36,13 +42,14 @@ def square_generator():
     i = 1;
     while i <= 100:
         data = []
-        data.append([i,0,i,i,0,1])
+        data.append([i,0,i,i,0,i])
         df = pd.DataFrame(data)
         file_name = "input/square"+"/"+"square"+str(i)+".txt";
         df.to_csv(file_name, sep=" ", index = False, header= False)
         i += 1
 
 
+# In[4]:
 
 
 def rectangle_generator():
@@ -72,6 +79,8 @@ def rectangle_generator():
         
 
 
+# In[5]:
+
 
 def parallelogram_generator():
     """
@@ -92,6 +101,7 @@ def parallelogram_generator():
         
 
 
+# In[6]:
 
 
 def rhombus_generator():
@@ -111,6 +121,7 @@ def rhombus_generator():
         j+=1
 
 
+# In[7]:
 
 
 def trapezoid_generator():
@@ -132,6 +143,7 @@ def trapezoid_generator():
         i+=1
 
 
+# In[8]:
 
 
 def kite_generator():
@@ -151,6 +163,7 @@ def kite_generator():
         i+=1
 
 
+# In[9]:
 
 
 def error_one():
@@ -207,6 +220,8 @@ def error_one():
     
 
 
+# In[10]:
+
 
 def error_two():
     """
@@ -218,14 +233,17 @@ def error_two():
         cointcidence_num1 = random.randint(1,100)
         cointcidence_num2 = random.randint(1,100)
         data=[]
-        line = [random.randint(0,100), random.randint(0,100), random.randint(0,100), random.randint(0,100),
+        line = [random.randint(0,100), random.randint(0,100),
                cointcidence_num1, cointcidence_num2,cointcidence_num1,cointcidence_num2]
         data.append(line)
         df = pd.DataFrame(data)
         file_name = "input/error_two/error_two"+str(i+1)+".txt"
         df.to_csv(file_name, sep=" ", header=None, index=False)
         i+=1
+                
 
+
+# In[11]:
 
 
 def error_three():
@@ -249,6 +267,7 @@ def error_three():
         i+=1
 
 
+# In[12]:
 
 
 def error_four():
@@ -260,13 +279,13 @@ def error_four():
     while i< 100:
         slope = random.randint(-5,5)
         constant = 0
-        smallest = 0
+        smallest = 1
         if slope <0:
             constant = random.randint(20,100)
         else:
             constant = random.randint(0,20)
         line = []
-        while smallest <3:
+        while smallest <4:
             line.append(smallest)
             line.append(smallest*slope+constant)
             smallest+=1
@@ -278,6 +297,14 @@ def error_four():
         i+=1    
 
 
+# In[13]:
+
 
 test_case_generator()
+
+
+# In[ ]:
+
+
+
 

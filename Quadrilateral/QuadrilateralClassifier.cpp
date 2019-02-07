@@ -111,7 +111,8 @@ void parseLine(std::string& data, std::vector<Point>& points, std::ofstream& out
     std::istringstream iss(data);
     std::vector<std::string> results((std::istream_iterator<std::string>(iss)),
                                      std::istream_iterator<std::string>());
-    points.push_back({0,0});
+    Point p = {0, 0};
+    points.push_back(p);
     if(results.size() != 6){
         out<<"error 1"<<std::endl;
         return;
@@ -129,7 +130,8 @@ void parseLine(std::string& data, std::vector<Point>& points, std::ofstream& out
                 out<<"error 1"<<std::endl;
                 return;
             }
-            points.push_back({x,y});
+            Point p = {x,y};
+            points.push_back(p);
         } catch(const std::invalid_argument&){
             out<<"error 1"<<std::endl;
             return;
