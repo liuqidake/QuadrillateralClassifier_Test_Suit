@@ -78,14 +78,26 @@ bool IsTrapezoid(const std::vector<Point>& points);
  */
 void CheckShape(const std::vector<Point>& shape, std::ofstream &out);
 
+
 void readInput(std::string fileName);
 
+
+/**
+ read input file to split each line and make a Point object. Check error one at the same time
+ */
 void parseLine(std::string& data, std::vector<Point>& points, std::ofstream& out);
 
+
+/**
+ put Points into a set to check if there is any coincidence value
+ */
 bool hasCoincide(std::set<Point,PointComparator>& set, const std::vector<Point> points);
 
 bool hasColinear(const std::vector<Point> points);
 
+/**
+ If two laterals which are not attached to each other has an intersection point and this point is inside the shape, then this shape has intersection
+ */
 bool hasIntersection(const std::vector<Point> points);
 
 bool isIntersected(const Point& lineAPointA, const Point& lineAPointB, const Point& lineBPointA, const Point& lineBPointB);

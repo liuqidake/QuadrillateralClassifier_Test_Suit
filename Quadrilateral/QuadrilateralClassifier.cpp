@@ -113,6 +113,7 @@ void parseLine(std::string& data, std::vector<Point>& points, std::ofstream& out
                                      std::istream_iterator<std::string>());
     Point p = {0, 0};
     points.push_back(p);
+    //error 1 : wrong number of input
     if(results.size() != 6){
         out<<"error 1"<<std::endl;
         return;
@@ -126,6 +127,7 @@ void parseLine(std::string& data, std::vector<Point>& points, std::ofstream& out
             int second = ++i;
             double y = std::stod(results[second]);
             int yCompare = std::stoi(results[second]);
+            //error one: contains non integer value
             if(x<0 || x > 100 || y<0 || y>100 || x!= xCompare || y!= yCompare){
                 out<<"error 1"<<std::endl;
                 return;
@@ -133,6 +135,7 @@ void parseLine(std::string& data, std::vector<Point>& points, std::ofstream& out
             Point p = {x,y};
             points.push_back(p);
         } catch(const std::invalid_argument&){
+            //error one: contain invalid characters
             out<<"error 1"<<std::endl;
             return;
         }
@@ -150,6 +153,7 @@ bool hasCoincide(std::set<Point,PointComparator>& set, const std::vector<Point> 
 }
 
 bool hasColinear(const std::vector<Point> points){
+    //Check if any two neighbor lateral have the same slope
     return ComputeSlope(points[0], points[1]) == ComputeSlope(points[1], points[2])
         || ComputeSlope(points[1], points[2]) == ComputeSlope(points[2], points[3])
     || ComputeSlope(points[2], points[3]) == ComputeSlope(points[3], points[0])
@@ -157,12 +161,14 @@ bool hasColinear(const std::vector<Point> points){
 }
 
 bool hasIntersection(const std::vector<Point> points){
+    // Find the limits of the shape
     double mostLeft = std::min(std::min(points[0].x, points[1].x), std::min(points[2].x, points[3].x));
     double mostRight = std::max(std::max(points[0].x, points[1].x), std::max(points[2].x, points[3].x));
     double mostTop = std::max(std::max(points[0].y, points[1].y), std::max(points[2].y, points[3].y));
     double mostBottom = std::min(std::min(points[0].y, points[1].y), std::min(points[2].y, points[3].y));
-    
+    //Check if two laterals has intersection
     if(isIntersected(points[0], points[1], points[2], points[3])){
+        //Find the intersection point and check if it is inside the limits of the shape
         Point intersection = getIntersectionPoint( points[0], points[1], points[2], points[3]);
         return intersection.x>=mostLeft && intersection.x <= mostRight && intersection.y >= mostBottom && intersection.y <= mostTop;
     }
@@ -183,12 +189,15 @@ bool isIntersected(const Point& lineAPointA, const Point& lineAPointB, const Poi
 }
 
 Point getIntersectionPoint(const Point& lineAPointA, const Point& lineAPointB, const Point& lineBPointA, const Point& lineBPointB){
+    //lateral one's slope and constant
     double slopeA = ComputeSlope(lineAPointA, lineAPointB);
     double constA = lineAPointA.y - slopeA * lineAPointA.x;
     
+    //lateral two's slope and constant
     double slopeB = ComputeSlope(lineBPointA, lineBPointB);
     double constB = lineBPointA.y - slopeB * lineBPointA.x;
     
+    //find the intersection point
     Point point;
     point.x = (constA - constB) / (slopeB - slopeA);
     point.y = point.x * slopeA + constA;
